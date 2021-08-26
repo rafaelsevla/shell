@@ -7,6 +7,8 @@
     "@babel/preset-react": "7.14.5",
     "babel-loader": "8.2.2",
     "html-webpack-plugin": "5.3.2",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
     "serve": "11.3.2",
     "webpack": "5.47.1",
     "webpack-cli": "4.7.2",
@@ -14,7 +16,7 @@
   },
   "scripts": {
     "start": "webpack-cli serve",
-    "build": "webpack --mode production",
+    "build": "webpack --mode production && gulp",
     "serve": "serve dist -p 3001",
     "clean": "rm -rf dist"
   },
