@@ -13,21 +13,24 @@ module.exports = {
   output: {
     publicPath: "auto",
   },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js"],
+  },
   module: {
     rules: [
       {
-        test: /\.m?js$/,
-        type: "javascript/auto",
-        resolve: {
-          fullySpecified: false,
-        },
+        test: /bootstrap\.tsx$/,
+        loader: "bundle-loader",
+        options: {
+          lazy: true,
+        }
       },
       {
-        test: /\.jsx?$/,
+        test: /\.tsx?$/,
         loader: "babel-loader",
         exclude: /node_modules/,
         options: {
-          presets: ["@babel/preset-react"],
+          presets: ["@babel/preset-react", "@babel/preset-typescript"],
         },
       },
     ],
