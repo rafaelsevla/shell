@@ -1,13 +1,18 @@
-import React from "react";
+import React from 'react';
 
 import { Button } from 'base';
 
-function loadComponent(scope, module) {
+function loadComponent (scope, module) {
   return async () => {
     // Initializes the share scope. This fills it with known provided modules from this build and all remotes
-    await __webpack_init_sharing__("default");
+    /*global __webpack_init_sharing__*/
+    /*eslint no-undef: "error"*/
+    await __webpack_init_sharing__('default');
     const container = window[scope]; // or get the container somewhere else
     // Initialize the container, it may provide shared modules
+    
+    /*global __webpack_share_scopes__*/
+    /*eslint no-undef: "error"*/
     await container.init(__webpack_share_scopes__.default);
     const factory = await window[scope].get(module);
     const Module = factory();
@@ -16,18 +21,18 @@ function loadComponent(scope, module) {
 }
 
 const useDynamicScript = (args) => {
-  const [ready, setReady] = React.useState(false);
-  const [failed, setFailed] = React.useState(false);
+  const [ ready, setReady ] = React.useState(false);
+  const [ failed, setFailed ] = React.useState(false);
 
   React.useEffect(() => {
     if (!args.url) {
       return;
     }
 
-    const element = document.createElement("script");
+    const element = document.createElement('script');
 
     element.src = args.url;
-    element.type = "text/javascript";
+    element.type = 'text/javascript';
     element.async = true;
 
     setReady(false);
@@ -50,7 +55,7 @@ const useDynamicScript = (args) => {
       console.log(`Dynamic Script Removed: ${args.url}`);
       document.head.removeChild(element);
     };
-  }, [args.url]);
+  }, [ args.url ]);
 
   return {
     ready,
@@ -58,7 +63,7 @@ const useDynamicScript = (args) => {
   };
 };
 
-function System(props) {
+function System (props) {
   const { ready, failed } = useDynamicScript({
     url: props.system && props.system.url,
   });
@@ -80,10 +85,13 @@ function System(props) {
     const Card = React.lazy(loadComponent(props.system.scope, props.system.modules.card));
     const Circle = React.lazy(loadComponent(props.system.scope, props.system.modules.circle));
 
+
+    const flexStyle = { display: 'flex' };
+
     return (
-      <React.Suspense fallback="Loading System">
+      <React.Suspense fallback='Loading System'>
         <Widget />
-        <div style={{ display: 'flex' }}>
+        <div style={flexStyle}>
           <Card />
           <Circle />
         </div>
@@ -92,57 +100,54 @@ function System(props) {
   }
 
   const Component = React.lazy(loadComponent(props.system.scope, props.system.modules.widget));
-          
+
   return (
-    <React.Suspense fallback="Loading System">
+    <React.Suspense fallback='Loading System'>
       <Component />
     </React.Suspense>
   );
 }
 
-function App() {
-  const [system, setSystem] = React.useState(undefined);
+function App () {
+  const [ system, setSystem ] = React.useState(undefined);
 
-  function setApp2() {
-    console.log('node.', process.env.NODE_ENV)
-  
+  function setApp2 () {
+    console.log('node.', process.env.NODE_ENV);
+
     setSystem({
-      url: process.env.NODE_ENV === 'development' ? "http://localhost:3002/remoteEntry.js" : "http://localhost:3001/mfe1/remoteEntry.js",
-      scope: "mfe1",
+      url: process.env.NODE_ENV === 'development' ? 'http://localhost:3002/remoteEntry.js' : 'http://localhost:3001/mfe1/remoteEntry.js',
+      scope: 'mfe1',
       modules: {
-        widget: "./Widget",
-        card: "./Card",
-        circle: "./Circle"
+        widget: './Widget',
+        card: './Card',
+        circle: './Circle'
       }
 
     });
   }
 
-  function setApp3() {
+  function setApp3 () {
     setSystem({
-      url: process.env.NODE_ENV === 'development' ? "http://localhost:3003/remoteEntry.js" : "http://localhost:3001/mfe2/remoteEntry.js",
-      scope: "mfe2",
-      modules: { widget: "./Widget" }
+      url: process.env.NODE_ENV === 'development' ? 'http://localhost:3003/remoteEntry.js' : 'http://localhost:3001/mfe2/remoteEntry.js',
+      scope: 'mfe2',
+      modules: { widget: './Widget' }
     });
   }
 
   return (
-    <div
-      style={{
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-      }}
-    >
+    <div>
       <h1>Dynamic System Host</h1>
       <h2>App 1</h2>
       <p>
-        The Dynamic System will take advantage Module Federation{" "}
+        The Dynamic System will take advantage Module Federation{' '}
         <strong>remotes</strong> and <strong>exposes</strong>. It will no load
         components that have been loaded already.
       </p>
       <Button onClick={setApp2} title='Load App 2 Widget' background='#ff0000' />
       <Button onClick={setApp3} title='Load App 3 Widget' background='#00ffff' />
-      <div style={{ marginTop: "2em" }}>
+
+      <br /><br />
+      <div>
         <System system={system} />
       </div>
     </div>
