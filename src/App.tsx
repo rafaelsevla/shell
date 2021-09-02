@@ -10,7 +10,7 @@ function loadComponent (scope, module) {
     await __webpack_init_sharing__('default');
     const container = window[scope]; // or get the container somewhere else
     // Initialize the container, it may provide shared modules
-    
+
     /*global __webpack_share_scopes__*/
     /*eslint no-undef: "error"*/
     await container.init(__webpack_share_scopes__.default);
