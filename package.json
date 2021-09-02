@@ -22,8 +22,7 @@
     "build": "webpack --mode production && gulp",
     "serve": "serve dist -p 3001",
     "clean": "rm -rf dist",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "postinstall": "husky install"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@babel/preset-typescript": "^7.15.0",
